@@ -9,7 +9,7 @@ import ru.sqlinvestigation.RestAPI.models.userDB.*;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtRequest;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtResponse;
-import ru.sqlinvestigation.RestAPI.models.userDB.JWT.RefreshToken;
+import ru.sqlinvestigation.RestAPI.models.userDB.RefreshToken;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserDetailsServiceImpl;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserService;
 

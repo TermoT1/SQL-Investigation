@@ -4,13 +4,18 @@ import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
+import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
+import ru.sqlinvestigation.RestAPI.models.userDB.UserDetails;
 import ru.sqlinvestigation.RestAPI.models.userDB.UserStats;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserStatsService;
 
 import javax.validation.Valid;
+import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
@@ -28,6 +33,15 @@ public class UserStatsController {
         return userStatsService.findAll();
     }
 
+    @GetMapping("/findMyStats")
+    public List<UserStats> findMyStats() throws Exception {
+        // Получаем id авторизованного пользователя
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        long userId  = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+
+        return userStatsService.findByUserId(userId);
+    }
+
     @GetMapping("/findByUserId/{id}")
     public List<UserStats> findByUserId(@PathVariable long id) throws Exception {
         return userStatsService.findByUserId(id);
@@ -37,6 +51,7 @@ public class UserStatsController {
     public List<UserStats> findByStoryId(@PathVariable long id) {
         return userStatsService.findAllByStoryId(id);
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {

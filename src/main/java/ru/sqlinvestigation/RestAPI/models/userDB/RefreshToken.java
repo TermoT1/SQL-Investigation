@@ -1,4 +1,4 @@
-package ru.sqlinvestigation.RestAPI.models.userDB.JWT;
+package ru.sqlinvestigation.RestAPI.models.userDB;
 
 import javax.persistence.*;
 

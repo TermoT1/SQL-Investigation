@@ -11,8 +11,8 @@ import java.util.Set;
 
 public class JwtAuthentication implements Authentication {
     private boolean authenticated;
+    private long userId;
     private String username;
-    private String firstName;
     private String role;
 
     @Override
@@ -37,22 +37,19 @@ public class JwtAuthentication implements Authentication {
     }
 
     @Override
-    public String getName() { return firstName; }
+    public String getName() { return username; }
 
-    public String getUsername() {
-        return username;
-    }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getRole() {
