@@ -1,13 +1,10 @@
 package ru.sqlinvestigation.RestAPI.config;
 
 import io.jsonwebtoken.Claims;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
 import ru.sqlinvestigation.RestAPI.services.userDB.JWT.JwtProvider;
 import ru.sqlinvestigation.RestAPI.services.userDB.JWT.JwtUtils;
@@ -17,16 +14,15 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class JwtFilter extends GenericFilterBean {
+public class JWTFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
     private final JwtProvider jwtProvider;
 
-    public JwtFilter(JwtProvider jwtProvider) {
+    public JWTFilter(JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }
 

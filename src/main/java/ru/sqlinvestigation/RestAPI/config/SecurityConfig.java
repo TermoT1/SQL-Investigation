@@ -2,7 +2,6 @@ package ru.sqlinvestigation.RestAPI.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,14 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserDetailsServiceImpl;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -30,10 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    private final JwtFilter jwtFilter;
+    private final JWTFilter jwtFilter;
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl , JwtFilter jwtFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl , JWTFilter jwtFilter) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.jwtFilter = jwtFilter;
     }
@@ -51,10 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/").hasAnyRole()
+//                .antMatchers("/").hasAnyRole()
                 .antMatchers(pathSwagger).permitAll()
                 //Аутентификация, регистрация и получение access токена по refresh.
                 .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/token").permitAll()
+                .antMatchers().permitAll()
                 .antMatchers("/api/auth/refresh").hasAnyRole("USER", "ADMIN")
 
                 .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")

@@ -3,22 +3,23 @@ package ru.sqlinvestigation.RestAPI.models.userDB;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "stories_images")
+@Table(name = "stories_images_1")
 public class StoryImage {
     @Id
     @Column(name = "id_stories")
     private long id_stories;
 
-    @Lob
-    @Column(name = "image")
-    private byte[] image;
+    @Column(name = "content_type")
+    private String content_type;
+    @Column(name = "original_file_name")
+    private String original_file_name;
+    @Column(name = "size")
+    private Long size;
+
+    @Basic(fetch = FetchType.LAZY)
+    private byte[] bytes;
 
     public StoryImage() {
-    }
-
-    public StoryImage(long id_stories, byte[] image) {
-        this.id_stories = id_stories;
-        this.image = image;
     }
 
     public long getId_stories() {
@@ -29,11 +30,35 @@ public class StoryImage {
         this.id_stories = id_stories;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getContent_type() {
+        return content_type;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
+
+    public String getOriginal_file_name() {
+        return original_file_name;
+    }
+
+    public void setOriginal_file_name(String original_file_name) {
+        this.original_file_name = original_file_name;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public byte[] getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(byte[] bytes) {
+        this.bytes = bytes;
     }
 }
