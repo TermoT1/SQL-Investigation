@@ -10,12 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
-import ru.sqlinvestigation.RestAPI.models.userDB.UserDetails;
 import ru.sqlinvestigation.RestAPI.models.userDB.UserStats;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserStatsService;
+import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
 import javax.validation.Valid;
-import javax.xml.crypto.Data;
 import java.util.List;
 
 @RestController
@@ -55,6 +54,24 @@ public class UserStatsController {
 
     @PostMapping("/create")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {
+        userStatsService.create(userStats, bindingResult);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/saveMyStats")
+    public ResponseEntity<HttpStatus> saveMyStats(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {
+        //Получаем id авторизованного пользователя
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        long userIdAuth  = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+        long userIdRequest = userStats.getUser_id();
+
+        if (userStats.getUser_id() == 0)
+            throw new RuntimeException("user id = null");
+
+        if (userIdAuth!=userIdRequest){
+            throw new RuntimeException("The given user id does not belong to you.");
+        }
+
         userStatsService.create(userStats, bindingResult);
         return ResponseEntity.ok(HttpStatus.OK);
     }
