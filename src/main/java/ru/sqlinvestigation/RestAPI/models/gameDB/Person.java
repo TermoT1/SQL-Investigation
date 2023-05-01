@@ -18,7 +18,7 @@ public class Person {
     private String age;
     private String eye_color;
     private String hair_color;
-    private int address_id;
+    private Long address_id;
 
     public Person() {
     }
@@ -79,11 +79,11 @@ public class Person {
         this.hair_color = hair_color;
     }
 
-    public int getAddress_id() {
+    public Long getAddress_id() {
         return address_id;
     }
 
-    public void setAddress_id(int adress_id) {
+    public void setAddress_id(Long adress_id) {
         this.address_id = adress_id;
     }
 }

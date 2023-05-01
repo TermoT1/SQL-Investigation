@@ -11,7 +11,7 @@ import ru.sqlinvestigation.RestAPI.models.userDB.JWT.RefreshJwtRequest;
 import ru.sqlinvestigation.RestAPI.services.userDB.JWT.AuthService;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -24,6 +24,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) {
         final JwtResponse token = authService.login(authRequest);
+        System.out.println("login");
         return ResponseEntity.ok(token);
     }
 

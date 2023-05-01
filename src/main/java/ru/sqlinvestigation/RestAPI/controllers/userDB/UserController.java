@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/userDB/user")
+@RequestMapping("/api/userDB/user")
 public class UserController {
 
     private final UserDetailsServiceImpl userDetailsService;
