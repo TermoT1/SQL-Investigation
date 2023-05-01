@@ -3,7 +3,7 @@ package ru.sqlinvestigation.RestAPI.models.userDB;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "stories_images_1")
+@Table(name = "stories_images")
 public class StoryImage {
     @Id
     @Column(name = "id_stories")

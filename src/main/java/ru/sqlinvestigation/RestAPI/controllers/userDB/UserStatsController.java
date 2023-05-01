@@ -18,7 +18,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/userDB/user_stats_by_stories")
+@RequestMapping("/api/userDB/user_stats_by_stories")
 public class UserStatsController {
     private final UserStatsService userStatsService;
 
