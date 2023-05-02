@@ -51,9 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/").hasAnyRole()
                 .antMatchers(pathSwagger).permitAll()
                 //Аутентификация, регистрация и получение access токена по refresh.
-                .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/token").permitAll()
+                .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/getNewAccessToken").permitAll()
                 .antMatchers().permitAll()
-                .antMatchers("/api/auth/refresh").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/auth/getNewRefreshToken").hasAnyRole("USER", "ADMIN")
 
                 .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")
                 .antMatchers(

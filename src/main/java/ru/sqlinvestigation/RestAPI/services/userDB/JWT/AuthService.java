@@ -9,6 +9,7 @@ import ru.sqlinvestigation.RestAPI.models.userDB.*;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtRequest;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtResponse;
+import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtResponseAccessToken;
 import ru.sqlinvestigation.RestAPI.models.userDB.RefreshToken;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserDetailsServiceImpl;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserService;
@@ -48,7 +49,7 @@ public class AuthService {
         }
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) throws Exception {
+    public JwtResponseAccessToken getAccessToken(@NonNull String refreshToken) throws Exception {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String userId = claims.getSubject();
@@ -57,10 +58,10 @@ public class AuthService {
                 final User user = userService.getById(Long.valueOf(userId))
                         .orElseThrow(() -> new AuthException("Пользователь не найден"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
-                return new JwtResponse(accessToken, null);
+                return new JwtResponseAccessToken(accessToken);
             }
         }
-        return new JwtResponse(null, null);
+        return new JwtResponseAccessToken(null);
     }
 
     public JwtResponse refresh(@NonNull String refreshToken) throws Exception {
