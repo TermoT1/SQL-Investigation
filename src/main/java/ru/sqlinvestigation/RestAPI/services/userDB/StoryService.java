@@ -1,7 +1,6 @@
 package ru.sqlinvestigation.RestAPI.services.userDB;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -19,7 +18,6 @@ import java.util.Optional;
 public class StoryService {
     private final StoryRepository storyRepository;
     private final BindingResultChecker bindingResultChecker;
-//    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public StoryService(StoryRepository storyRepository, BindingResultChecker bindingResultChecker) {
@@ -27,11 +25,14 @@ public class StoryService {
         this.bindingResultChecker = bindingResultChecker;
     }
 
-//    public List<StoryDTO> findAll() throws EntityNotFoundException {
-//        return storyRepository.findAll().stream()
-//                .map(story -> new StoryDTO(story.getId(), story.getTitle(), story.getDifficulty(), story.getDescription(), story.getStory_text()))
-//                .collect(Collectors.toList());
-//    }
+    public boolean isAnswerCorrect(long userId, String answer, long storyId) {
+        Optional<Story> optionalStory = storyRepository.findById(storyId);
+        if(optionalStory.isEmpty()){
+            throw new NotFoundException(String.format("Entity with id %s not found", storyId));
+        }
+        Story story = optionalStory.get();
+        return story.getAnswer().equals(answer);
+    }
 
     public List<Story> findAll() throws EntityNotFoundException {
         return storyRepository.findAll();
@@ -74,7 +75,6 @@ public class StoryService {
             throw new NotFoundException(String.format("Entity with id %s not found", id));
         storyRepository.deleteById(id);
     }
-
     public boolean existsById(long id) {
         return storyRepository.existsById(id);
     }

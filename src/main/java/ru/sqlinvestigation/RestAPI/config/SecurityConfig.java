@@ -56,10 +56,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/refresh").hasAnyRole("USER", "ADMIN")
 
                 .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/userDB/stories/getById/**",
+                .antMatchers(
+                        //User Stats By Stories
                         "/api/userDB/user_stats_by_stories/findMyStats",
                         "/api/userDB/user_stats_by_stories/saveMyStats",
-                        "/api/userDB/stories_images/findByStoryId/**").hasAnyRole("USER", "ADMIN")
+                        "/api/userDB/stories_images/findByStoryId/**",
+                        //Story
+                        "/api/userDB/stories/getById/**",
+                        "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
 
 
                 .antMatchers("/api/gameDB/**").hasRole("ADMIN")
