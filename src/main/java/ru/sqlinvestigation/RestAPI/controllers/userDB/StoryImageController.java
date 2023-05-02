@@ -36,7 +36,6 @@ public class StoryImageController {
     public ResponseEntity<InputStreamResource> findByStoryId(@PathVariable long id) throws Exception {
         StoryImage storyImage = storyImageService.findByStoryId(id);
         return ResponseEntity.ok()
-                .header("fileName", storyImage.getOriginal_file_name())
                 .contentType(MediaType.valueOf(storyImage.getContent_type()))
                 .contentLength(storyImage.getSize())
                 .body(new InputStreamResource(new ByteArrayInputStream(storyImage.getBytes())));
