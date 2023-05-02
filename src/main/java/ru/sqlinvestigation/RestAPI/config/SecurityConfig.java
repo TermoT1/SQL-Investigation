@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserDetailsServiceImpl;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -43,12 +44,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // конфигурируем сам Spring Security
+        //Отключение csrf, включение CORS
+        http = http.cors().and().csrf().disable();
+        // Set session management to stateless
+        http = http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and();
+        // Set unauthorized requests exception handler
+        http = http
+                .exceptionHandling()
+                .authenticationEntryPoint(
+                        (request, response, ex) -> {
+                            response.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    ex.getMessage() + "asdasdasdas"
+                            );
+                        }
+                )
+                .and();
+        // Set permissions on endpoints
         http
-                .cors().and()
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/admin").hasRole("ADMIN")
-//                .antMatchers("/").hasAnyRole()
+//                .antMatchers("/").permitAll()
                 .antMatchers(pathSwagger).permitAll()
                 //Аутентификация, регистрация и получение access токена по refresh.
                 .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/getNewAccessToken").permitAll()
@@ -64,32 +83,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         //Story
                         "/api/userDB/stories/getById/**",
                         "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
-
-
                 .antMatchers("/api/gameDB/**").hasRole("ADMIN")
 
-
                 .anyRequest().hasAnyRole("ADMIN")
-//                .and().cors()
-                .and()
-//                .formLogin().loginPage("/auth/login")
-//                .loginProcessingUrl("/process_login")
-//                .defaultSuccessUrl("/hello", true)
-//                .failureUrl("/auth/login?error")
-//                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/auth/login")
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterAfter((jwtFilter), UsernamePasswordAuthenticationFilter.class);
-
-
-
-//        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .and();
+        // Add JWT token filter
+        http.addFilterAfter((jwtFilter), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
