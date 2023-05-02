@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // конфигурируем сам Spring Security
         //Отключение csrf, включение CORS
-        http = http.cors().and().csrf().disable();
+        http = http.cors().and().httpBasic().disable().csrf().disable();
         // Set session management to stateless
         http = http
                 .sessionManagement()
@@ -63,32 +63,61 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         }
                 )
                 .and();
-        // Set permissions on endpoints
+        //Set permissions on endpoints
         http
-                .authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN")
-//                .antMatchers("/").permitAll()
-                .antMatchers(pathSwagger).permitAll()
-                //Аутентификация, регистрация и получение access токена по refresh.
-                .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/getNewAccessToken").permitAll()
-                .antMatchers().permitAll()
-                .antMatchers("/api/auth/getNewRefreshToken").hasAnyRole("USER", "ADMIN")
+                .authorizeHttpRequests(
+                    authz -> authz
+                    .antMatchers("/admin").hasRole("ADMIN")
+                    .antMatchers(pathSwagger).permitAll()
+                    //Аутентификация, регистрация и получение access токена по refresh.
+                    .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/getNewAccessToken").permitAll()
+//                    .antMatchers("/").permitAll()
+                    .antMatchers("/api/auth/getNewRefreshToken").hasAnyRole("USER", "ADMIN")
 
-                .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")
-                .antMatchers(
-                        //User Stats By Stories
-                        "/api/userDB/user_stats_by_stories/findMyStats",
-                        "/api/userDB/user_stats_by_stories/saveMyStats",
-                        "/api/userDB/stories_images/findByStoryId/**",
-                        //Story
-                        "/api/userDB/stories/getById/**",
-                        "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/gameDB/**").hasRole("ADMIN")
+                    .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")
+                    .antMatchers(
+                            //User Stats By Stories
+                            "/api/userDB/user_stats_by_stories/findMyStats",
+                            "/api/userDB/user_stats_by_stories/saveMyStats",
+                            "/api/userDB/stories_images/findByStoryId/**",
+                            //Story
+                            "/api/userDB/stories/getById/**",
+                            "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
+                    .antMatchers("/api/gameDB/**").hasRole("ADMIN")
 
-                .anyRequest().hasAnyRole("ADMIN")
-                .and();
-        // Add JWT token filter
-        http.addFilterAfter((jwtFilter), UsernamePasswordAuthenticationFilter.class);
+                    .anyRequest().hasAnyRole("ADMIN")
+                    .and()
+                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+    );
+
+
+
+//        // Set permissions on endpoints
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/admin").hasRole("ADMIN")
+////                .antMatchers("/").permitAll()
+//                .antMatchers(pathSwagger).permitAll()
+//                //Аутентификация, регистрация и получение access токена по refresh.
+//                .antMatchers("/api/auth/login", "/api/userDB/user/registration", "/api/auth/getNewAccessToken").permitAll()
+//                .antMatchers().permitAll()
+//                .antMatchers("/api/auth/getNewRefreshToken").hasAnyRole("USER", "ADMIN")
+//
+//                .antMatchers("/api/fileDB/get").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(
+//                        //User Stats By Stories
+//                        "/api/userDB/user_stats_by_stories/findMyStats",
+//                        "/api/userDB/user_stats_by_stories/saveMyStats",
+//                        "/api/userDB/stories_images/findByStoryId/**",
+//                        //Story
+//                        "/api/userDB/stories/getById/**",
+//                        "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
+//                .antMatchers("/api/gameDB/**").hasRole("ADMIN")
+//
+//                .anyRequest().hasAnyRole("ADMIN")
+//                .and();
+//        // Add JWT token filter
+       // http.addFilterAfter((jwtFilter), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
