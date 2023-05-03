@@ -11,8 +11,6 @@ public class StoryImage {
 
     @Column(name = "content_type")
     private String content_type;
-    @Column(name = "original_file_name")
-    private String original_file_name;
     @Column(name = "size")
     private Long size;
 
@@ -36,14 +34,6 @@ public class StoryImage {
 
     public void setContent_type(String content_type) {
         this.content_type = content_type;
-    }
-
-    public String getOriginal_file_name() {
-        return original_file_name;
-    }
-
-    public void setOriginal_file_name(String original_file_name) {
-        this.original_file_name = original_file_name;
     }
 
     public Long getSize() {

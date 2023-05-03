@@ -75,7 +75,6 @@ public class StoryImageService {
     }
     private StoryImage getFileAttributes(MultipartFile file) throws IOException {
         StoryImage storyImage = new StoryImage();
-        storyImage.setOriginal_file_name(file.getOriginalFilename());
         storyImage.setContent_type(file.getContentType());
         storyImage.setSize(file.getSize());
         storyImage.setBytes(file.getBytes());
