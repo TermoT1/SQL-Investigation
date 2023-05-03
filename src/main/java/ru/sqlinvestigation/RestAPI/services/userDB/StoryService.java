@@ -34,7 +34,7 @@ public class StoryService {
             throw new NotFoundException(String.format("Entity with id %s not found", storyId));
         }
         Story story = optionalStory.get();
-        boolean isCorrect = story.getAnswer().equals(answer);
+        boolean isCorrect = story.getAnswer().equalsIgnoreCase(answer);
         userStatsService.counterCheckAnswer(storyId, userId, isCorrect);
         return isCorrect;
     }

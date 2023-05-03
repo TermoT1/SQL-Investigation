@@ -20,11 +20,13 @@ public class UserStats {
     private int checks_answer;
     @Column(name = "scores")
     private Integer scores;
+    @Column(name = "is_completed")
+    private boolean is_completed;
 
     public UserStats() {
     }
 
-    public UserStats(long story_id, long user_id, Timestamp game_end_date, int checks_answer, int scores) {
+    public UserStats(long story_id, long user_id, Timestamp game_end_date, int checks_answer, int scores, boolean is_completed) {
         this.story_id = story_id;
         this.user_id = user_id;
         this.game_end_date = game_end_date;
@@ -33,6 +35,9 @@ public class UserStats {
     }
 
     public UserStats(long story_id, long user_id, int checks_answer) {
+        this.story_id = story_id;
+        this.user_id = user_id;
+        this.checks_answer = checks_answer;
     }
 
     public long getId() {
@@ -81,5 +86,13 @@ public class UserStats {
 
     public void setScores(Integer scores) {
         this.scores = scores;
+    }
+
+    public boolean isIs_completed() {
+        return is_completed;
+    }
+
+    public void setIs_completed(boolean is_completed) {
+        this.is_completed = is_completed;
     }
 }

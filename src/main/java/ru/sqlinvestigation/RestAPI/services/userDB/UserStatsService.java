@@ -49,33 +49,36 @@ public class UserStatsService {
     @Transactional(transactionManager = "userTransactionManager")
     public void counterCheckAnswer(long storyId, long userId, boolean isCorrect) {
         var list = userStatsRepo.findNotEndStoryByStoryIdAndUserid(storyId, userId);
-        //Если не было прохождений сюжета
+        if (list.size() > 1)
+            throw new RuntimeException("Error in DB. There cannot be more than 1 entry of an unfinished story.");
+        //Если сюжет впервые проверяется
         if (list.isEmpty()){
             if (isCorrect){
                 LocalDateTime currentDateTime = LocalDateTime.now();
                 Timestamp timestamp = Timestamp.valueOf(currentDateTime);
-                userStatsRepo.save(new UserStats(storyId, userId, timestamp, 1, 100));
+                userStatsRepo.save(new UserStats(storyId, userId, timestamp, 1, 100, true));
             }
             else { userStatsRepo.save(new UserStats(storyId, userId, 1));}
         }
-        //Если были, то ищем последнее без даты окончания
+        //Если сюжет начат, то ищем с флагом isCompleted
         else{
             for (UserStats stats : list) {
-                if (stats.getGame_end_date() == null) {
-                    var checks =  stats.getChecks_answer() + 1;
-                    if (isCorrect){
-                        LocalDateTime currentDateTime = LocalDateTime.now();
-                        Timestamp timestamp = Timestamp.valueOf(currentDateTime);
-                        stats.setChecks_answer(checks);
-                        stats.setGame_end_date(timestamp);
-                        stats.setScores(100/checks);
-                    }
-                    else {
-                        stats.setChecks_answer(checks);
-                    }
-                    userStatsRepo.save(stats);
-                    return;
+                if (stats.isIs_completed() != false)
+                    throw new RuntimeException("Error in DB. is_completed is not equal to false.");
+                var checks =  stats.getChecks_answer() + 1;
+                if (isCorrect){
+                    LocalDateTime currentDateTime = LocalDateTime.now();
+                    Timestamp timestamp = Timestamp.valueOf(currentDateTime);
+                    stats.setChecks_answer(checks);
+                    stats.setGame_end_date(timestamp);
+                    stats.setScores(100/checks);
+                    stats.setIs_completed(true);
                 }
+                else {
+                    stats.setChecks_answer(checks);
+                }
+                userStatsRepo.save(stats);
+                return;
             }
         }
     }
