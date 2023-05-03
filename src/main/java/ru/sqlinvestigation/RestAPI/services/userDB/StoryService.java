@@ -17,21 +17,26 @@ import java.util.Optional;
 @Service
 public class StoryService {
     private final StoryRepository storyRepository;
+    private final UserStatsService userStatsService;
     private final BindingResultChecker bindingResultChecker;
 
     @Autowired
-    public StoryService(StoryRepository storyRepository, BindingResultChecker bindingResultChecker) {
+    public StoryService(StoryRepository storyRepository, UserStatsService userStatsService, BindingResultChecker bindingResultChecker) {
         this.storyRepository = storyRepository;
+        this.userStatsService = userStatsService;
         this.bindingResultChecker = bindingResultChecker;
     }
 
+    @Transactional(transactionManager = "userTransactionManager")
     public boolean isAnswerCorrect(long userId, String answer, long storyId) {
         Optional<Story> optionalStory = storyRepository.findById(storyId);
         if(optionalStory.isEmpty()){
             throw new NotFoundException(String.format("Entity with id %s not found", storyId));
         }
         Story story = optionalStory.get();
-        return story.getAnswer().equals(answer);
+        boolean isCorrect = story.getAnswer().equals(answer);
+        userStatsService.counterCheckAnswer(storyId, userId, isCorrect);
+        return isCorrect;
     }
 
     public List<Story> findAll() throws EntityNotFoundException {

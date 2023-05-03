@@ -58,23 +58,23 @@ public class UserStatsController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PostMapping("/saveMyStats")
-    public ResponseEntity<HttpStatus> saveMyStats(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {
-        //Получаем id авторизованного пользователя
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        long userIdAuth  = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
-        long userIdRequest = userStats.getUser_id();
-
-        if (userStats.getUser_id() == 0)
-            throw new RuntimeException("user id = null");
-
-        if (userIdAuth!=userIdRequest){
-            throw new RuntimeException("The given user id does not belong to you.");
-        }
-
-        userStatsService.create(userStats, bindingResult);
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
+//    @PostMapping("/saveMyStats")
+//    public ResponseEntity<HttpStatus> saveMyStats(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {
+//        //Получаем id авторизованного пользователя
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        long userIdAuth  = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+//        long userIdRequest = userStats.getUser_id();
+//
+//        if (userStats.getUser_id() == 0)
+//            throw new RuntimeException("user id = null");
+//
+//        if (userIdAuth!=userIdRequest){
+//            throw new RuntimeException("The given user id does not belong to you.");
+//        }
+//
+//        userStatsService.create(userStats, bindingResult);
+//        return ResponseEntity.ok(HttpStatus.OK);
+//    }
 
     @PostMapping("/update")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {

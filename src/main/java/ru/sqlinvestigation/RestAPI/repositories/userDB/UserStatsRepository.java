@@ -14,7 +14,8 @@ import java.util.Optional;
 public interface UserStatsRepository extends JpaRepository<UserStats, Long> {
     @Query("SELECT e FROM UserStats e WHERE e.user_id = :user_id")
     List<UserStats> findAllByUserId(long user_id);
-
     @Query("SELECT e FROM UserStats e WHERE e.story_id = :story_id")
     List<UserStats> findAllByStoryId(long story_id);
+    @Query("SELECT e FROM UserStats e WHERE e.story_id = :story_id AND e.user_id = :user_id AND e.game_end_date is null")
+    List<UserStats> findNotEndStoryByStoryIdAndUserid(long story_id, long user_id);
 }

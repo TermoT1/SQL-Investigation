@@ -78,7 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(
                             //User Stats By Stories
                             "/api/userDB/user_stats_by_stories/findMyStats",
-                            "/api/userDB/user_stats_by_stories/saveMyStats",
                             "/api/userDB/stories_images/findByStoryId/**",
                             //Story
                             "/api/userDB/stories/getById/**",

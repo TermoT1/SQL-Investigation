@@ -1,8 +1,7 @@
 package ru.sqlinvestigation.RestAPI.models.userDB;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.util.Objects;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "user_stats_by_stories")
@@ -11,33 +10,36 @@ public class UserStats {
     @Id
     @Column(name = "id")
     private long id;
-    @Basic
     @Column(name = "story_id")
     private long story_id;
-    @Basic
     @Column(name = "user_id")
     private long user_id;
-    @Basic
     @Column(name = "game_end_date")
-    private Date game_end_date;
-    @Basic
+    private Timestamp game_end_date;
     @Column(name = "checks_answer")
     private int checks_answer;
-    @Basic
     @Column(name = "scores")
-    private int scores;
-    @Basic
-    @Column(name = "game_end_time_in_sec")
-    private int game_end_time_in_sec;
+    private Integer scores;
 
     public UserStats() {
+    }
+
+    public UserStats(long story_id, long user_id, Timestamp game_end_date, int checks_answer, int scores) {
+        this.story_id = story_id;
+        this.user_id = user_id;
+        this.game_end_date = game_end_date;
+        this.checks_answer = checks_answer;
+        this.scores = scores;
+    }
+
+    public UserStats(long story_id, long user_id, int checks_answer) {
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -45,7 +47,7 @@ public class UserStats {
         return story_id;
     }
 
-    public void setStory_id(int story_id) {
+    public void setStory_id(long story_id) {
         this.story_id = story_id;
     }
 
@@ -53,15 +55,15 @@ public class UserStats {
         return user_id;
     }
 
-    public void setUser_id(int user_id) {
+    public void setUser_id(long user_id) {
         this.user_id = user_id;
     }
 
-    public Date getGame_end_date() {
+    public Timestamp getGame_end_date() {
         return game_end_date;
     }
 
-    public void setGame_end_date(Date game_end_date) {
+    public void setGame_end_date(Timestamp game_end_date) {
         this.game_end_date = game_end_date;
     }
 
@@ -73,19 +75,11 @@ public class UserStats {
         this.checks_answer = checks_answer;
     }
 
-    public int getScores() {
+    public Integer getScores() {
         return scores;
     }
 
-    public void setScores(int scores) {
+    public void setScores(Integer scores) {
         this.scores = scores;
-    }
-
-    public int getGame_end_time_in_sec() {
-        return game_end_time_in_sec;
-    }
-
-    public void setGame_end_time_in_sec(int game_end_time_in_sec) {
-        this.game_end_time_in_sec = game_end_time_in_sec;
     }
 }

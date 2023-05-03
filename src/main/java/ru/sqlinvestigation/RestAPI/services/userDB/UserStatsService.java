@@ -12,6 +12,10 @@ import ru.sqlinvestigation.RestAPI.repositories.userDB.UserStatsRepository;
 import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +44,40 @@ public class UserStatsService {
 
     public List<UserStats> findAllByStoryId(long id) throws EntityNotFoundException{
         return userStatsRepo.findAllByStoryId(id);
+    }
+
+    @Transactional(transactionManager = "userTransactionManager")
+    public void counterCheckAnswer(long storyId, long userId, boolean isCorrect) {
+        var list = userStatsRepo.findNotEndStoryByStoryIdAndUserid(storyId, userId);
+        //Если не было прохождений сюжета
+        if (list.isEmpty()){
+            if (isCorrect){
+                LocalDateTime currentDateTime = LocalDateTime.now();
+                Timestamp timestamp = Timestamp.valueOf(currentDateTime);
+                userStatsRepo.save(new UserStats(storyId, userId, timestamp, 1, 100));
+            }
+            else { userStatsRepo.save(new UserStats(storyId, userId, 1));}
+        }
+        //Если были, то ищем последнее без даты окончания
+        else{
+            for (UserStats stats : list) {
+                if (stats.getGame_end_date() == null) {
+                    var checks =  stats.getChecks_answer() + 1;
+                    if (isCorrect){
+                        LocalDateTime currentDateTime = LocalDateTime.now();
+                        Timestamp timestamp = Timestamp.valueOf(currentDateTime);
+                        stats.setChecks_answer(checks);
+                        stats.setGame_end_date(timestamp);
+                        stats.setScores(100/checks);
+                    }
+                    else {
+                        stats.setChecks_answer(checks);
+                    }
+                    userStatsRepo.save(stats);
+                    return;
+                }
+            }
+        }
     }
 
     public void create(UserStats story, BindingResult bindingResult) {
@@ -83,5 +121,4 @@ public class UserStatsService {
     public boolean existsByStoryId(long id) {
         return storyRepo.existsById(id);
     }
-
 }
