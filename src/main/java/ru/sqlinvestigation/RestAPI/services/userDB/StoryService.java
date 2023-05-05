@@ -57,12 +57,13 @@ public class StoryService {
         return storyDTO;
     }
 
-    public void create(Story story, BindingResult bindingResult) {
+    public long create(Story story, BindingResult bindingResult) {
         bindingResultChecker.check(bindingResult);
         if (existsById(story.getId()))
             throw new NotFoundException(String.format("Row with id %s already exists", story.getId()));
-//        story.setAnswer(passwordEncoder.encode(story.getAnswer()));
+        story.setId(0);
         storyRepository.save(story);
+        return story.getId();
     }
 
     @Transactional(transactionManager = "userTransactionManager")

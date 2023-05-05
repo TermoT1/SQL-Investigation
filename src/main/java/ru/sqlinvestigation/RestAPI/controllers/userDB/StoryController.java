@@ -13,7 +13,6 @@ import ru.sqlinvestigation.RestAPI.dto.userDB.Answer;
 import ru.sqlinvestigation.RestAPI.dto.userDB.StoryDTO;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
 import ru.sqlinvestigation.RestAPI.models.userDB.Story;
-import ru.sqlinvestigation.RestAPI.models.userDB.UserStats;
 import ru.sqlinvestigation.RestAPI.services.userDB.StoryService;
 
 import javax.validation.Valid;
@@ -40,9 +39,9 @@ public class StoryController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid Story story, BindingResult bindingResult) {
-        storyService.create(story, bindingResult);
-        return ResponseEntity.ok(HttpStatus.OK);
+    public ResponseEntity<String> create(@RequestBody @Valid Story story, BindingResult bindingResult) {
+        long id = storyService.create(story, bindingResult);
+        return ResponseEntity.ok(String.format("id: %s",id));
     }
 
     @PostMapping("/update")
