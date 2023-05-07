@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.webjars.NotFoundException;
 import ru.sqlinvestigation.RestAPI.dto.userDB.StoryDTO;
 import ru.sqlinvestigation.RestAPI.models.userDB.Story;
+import ru.sqlinvestigation.RestAPI.repositories.userDB.StoryImageRepository;
 import ru.sqlinvestigation.RestAPI.repositories.userDB.StoryRepository;
 import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
@@ -17,12 +18,15 @@ import java.util.Optional;
 @Service
 public class StoryService {
     private final StoryRepository storyRepository;
+
+    private final StoryImageRepository storyImageRepo;
     private final UserStatsService userStatsService;
     private final BindingResultChecker bindingResultChecker;
 
     @Autowired
-    public StoryService(StoryRepository storyRepository, UserStatsService userStatsService, BindingResultChecker bindingResultChecker) {
+    public StoryService(StoryRepository storyRepository, StoryImageRepository storyImageRepo, UserStatsService userStatsService, BindingResultChecker bindingResultChecker) {
         this.storyRepository = storyRepository;
+        this.storyImageRepo = storyImageRepo;
         this.userStatsService = userStatsService;
         this.bindingResultChecker = bindingResultChecker;
     }
@@ -79,6 +83,7 @@ public class StoryService {
     public void delete(long id) {
         if (!existsById(id))
             throw new NotFoundException(String.format("Entity with id %s not found", id));
+        storyImageRepo.deleteById(id);
         storyRepository.deleteById(id);
     }
     public boolean existsById(long id) {

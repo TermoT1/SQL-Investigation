@@ -6,9 +6,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "stories")
 public class Story {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "title")
