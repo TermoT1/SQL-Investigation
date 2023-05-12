@@ -101,7 +101,9 @@ public class StoryService {
     public void delete(long id) {
         if (!existsById(id))
             throw new NotFoundException(String.format("Entity with id %s not found", id));
-        storyImageRepo.deleteById(id);
+        //Если сущесвует картинка
+        if (storyImageRepo.existsById(id))
+            storyImageRepo.deleteById(id);
         storyRepository.deleteById(id);
     }
     public boolean existsById(long id) {
