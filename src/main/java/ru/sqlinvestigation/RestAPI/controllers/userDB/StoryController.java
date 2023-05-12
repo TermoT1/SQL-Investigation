@@ -33,6 +33,11 @@ public class StoryController {
         return storyService.findAll();
     }
 
+    @GetMapping("/listStory")
+    public List<StoryDTO> getListStoryDTO() {
+        return storyService.findAllDTO();
+    }
+
     @GetMapping("/getById/{id}")
     public StoryDTO getById(@PathVariable long id) {
         return storyService.findById(id);

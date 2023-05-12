@@ -81,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/userDB/stories_images/findByStoryId/**",
                             //Story
                             "/api/userDB/stories/getById/**",
+                            "/api/userDB/stories/listStory",
                             "/api/userDB/stories/checkAnswer/**").hasAnyRole("USER", "ADMIN")
                     .antMatchers("/api/gameDB/**").hasRole("ADMIN")
 

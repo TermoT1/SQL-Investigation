@@ -12,6 +12,7 @@ import ru.sqlinvestigation.RestAPI.repositories.userDB.StoryRepository;
 import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,23 @@ public class StoryService {
     public List<Story> findAll() throws EntityNotFoundException {
         return storyRepository.findAll();
     }
+
+    public List<StoryDTO> findAllDTO() throws EntityNotFoundException {
+        List<Story> storyList = storyRepository.findAll();
+        List<StoryDTO> storyDTOList = new ArrayList<>();
+        for (Story story : storyList) {
+            StoryDTO storyDTO = new StoryDTO();
+            storyDTO.setId(story.getId());
+            storyDTO.setTitle(story.getTitle());
+            storyDTO.setDifficulty(story.getDifficulty());
+            storyDTO.setDescription(story.getDescription());
+            storyDTO.setStory_text(story.getStory_text());
+            storyDTOList.add(storyDTO);
+        }
+        return storyDTOList;
+    }
+
+
     public StoryDTO findById(long id) throws EntityNotFoundException {
         Optional<Story> story = storyRepository.findById(id);
         if(story.isEmpty())
