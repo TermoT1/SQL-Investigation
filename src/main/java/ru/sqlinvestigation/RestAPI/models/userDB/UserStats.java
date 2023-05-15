@@ -32,6 +32,7 @@ public class UserStats {
         this.game_end_date = game_end_date;
         this.checks_answer = checks_answer;
         this.scores = scores;
+        this.is_completed = is_completed;
     }
 
     public UserStats(long story_id, long user_id, int checks_answer) {
