@@ -1,10 +1,12 @@
 package ru.sqlinvestigation.RestAPI.services.userDB;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.webjars.NotFoundException;
+import ru.sqlinvestigation.RestAPI.dto.userDB.UserStatsDTO;
 import ru.sqlinvestigation.RestAPI.models.userDB.UserStats;
 import ru.sqlinvestigation.RestAPI.repositories.userDB.StoryRepository;
 import ru.sqlinvestigation.RestAPI.repositories.userDB.UserRepository;
@@ -12,12 +14,10 @@ import ru.sqlinvestigation.RestAPI.repositories.userDB.UserStatsRepository;
 import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
 import javax.persistence.EntityNotFoundException;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserStatsService {
@@ -26,12 +26,15 @@ public class UserStatsService {
     private final StoryRepository storyRepo;
     private final BindingResultChecker bindingResultChecker;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public UserStatsService(UserStatsRepository userStatsRepo, UserRepository userRepo, StoryRepository storyRepo, BindingResultChecker bindingResultChecker) {
+    public UserStatsService(UserStatsRepository userStatsRepo, UserRepository userRepo, StoryRepository storyRepo, BindingResultChecker bindingResultChecker, ModelMapper modelMapper) {
         this.userStatsRepo = userStatsRepo;
         this.userRepo = userRepo;
         this.storyRepo = storyRepo;
         this.bindingResultChecker = bindingResultChecker;
+        this.modelMapper = modelMapper;
     }
 
     public List<UserStats> findAll() throws EntityNotFoundException {
@@ -45,7 +48,18 @@ public class UserStatsService {
     public List<UserStats> findAllByStoryId(long id) throws EntityNotFoundException{
         return userStatsRepo.findAllByStoryId(id);
     }
-
+    @Transactional(transactionManager = "userTransactionManager")
+    public List<UserStatsDTO> findMyStatsByStoryId(long storyId, long userId) {
+        if (!existsByStoryId(storyId))
+            throw new NotFoundException(String.format("Row with id %s was not found",storyId));
+        List<UserStats> userStatsList = userStatsRepo.findAllStatsByStoryId(storyId, userId);
+        List<UserStatsDTO> userStatsDTOList = new ArrayList<>();
+        for (UserStats userStats : userStatsList) {
+            UserStatsDTO userStatsDTO = modelMapper.map(userStats, UserStatsDTO.class);
+            userStatsDTOList.add(userStatsDTO);
+        }
+        return userStatsDTOList;
+    }
     @Transactional(transactionManager = "userTransactionManager")
     public void counterCheckAnswer(long storyId, long userId, boolean isCorrect) {
         var list = userStatsRepo.findNotEndStoryByStoryIdAndUserid(storyId, userId);

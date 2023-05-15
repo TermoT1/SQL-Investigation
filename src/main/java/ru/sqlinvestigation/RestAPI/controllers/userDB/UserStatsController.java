@@ -9,10 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
+import ru.sqlinvestigation.RestAPI.dto.userDB.UserStatsDTO;
 import ru.sqlinvestigation.RestAPI.models.userDB.JWT.JwtAuthentication;
 import ru.sqlinvestigation.RestAPI.models.userDB.UserStats;
 import ru.sqlinvestigation.RestAPI.services.userDB.UserStatsService;
-import ru.sqlinvestigation.RestAPI.util.BindingResultChecker;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -51,6 +51,13 @@ public class UserStatsController {
         return userStatsService.findAllByStoryId(id);
     }
 
+    @GetMapping("/findMyStatsByStoryId/{storyId}")
+    public List<UserStatsDTO> findMyStatsByStoryId(@PathVariable long storyId) {
+        // Получаем id авторизованного пользователя
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        long userId  = ((JwtAuthentication) SecurityContextHolder.getContext().getAuthentication()).getUserId();
+        return userStatsService.findMyStatsByStoryId(storyId, userId);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserStats userStats, BindingResult bindingResult) {
