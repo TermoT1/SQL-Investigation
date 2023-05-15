@@ -53,8 +53,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<HttpStatus> performLogin(@Valid @RequestBody UserDTO userDTO, BindingResult bindingResult) {
-        User user = convertToUser(userDTO);
+    public ResponseEntity<HttpStatus> performLogin(@Valid @RequestBody User user, BindingResult bindingResult) {
         userService.update(user, bindingResult);
         return ResponseEntity.ok(HttpStatus.OK);
     }

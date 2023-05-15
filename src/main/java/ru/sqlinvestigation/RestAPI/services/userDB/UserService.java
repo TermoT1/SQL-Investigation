@@ -64,7 +64,6 @@ public class UserService {
         // проверяем, существуют ли записи с таким идентификаторами
         if (!existsById(user.getId()))
             throw new NotFoundException(String.format("Row with id %s was not found", user.getId()));
-
         user.setRole(userRepository.findById(user.getId()).get().getRole());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
